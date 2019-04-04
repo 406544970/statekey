@@ -1,5 +1,6 @@
 package com.lh.starkey.controller;
 
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 import com.google.gson.Gson;
 import com.lh.starkey.DemoApplication;
 import com.lh.starkey.common.CommonQuery;
@@ -12,8 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author: 梁昊
@@ -34,20 +41,22 @@ public class BasicDictionaryControllerTest {
     Gson gson;
 
     @Test
-    public void saveAllToRedis(){
+    public void saveAllToRedis() {
         oilUseController.saveAllToRedis();
     }
+
     @Test
-    public void selectAllOilUse(){
+    public void selectAllOilUse() {
         System.out.println(gson.toJson(oilUseController.selectAllOilUse()));
     }
+
     @Test
-    public void selectAllOilBase(){
+    public void selectAllOilBase() {
         System.out.println(gson.toJson(oilUseController.selectAllOilBase()));
     }
 
     @Test
-    public void selectAllOil(){
+    public void selectAllOil() {
         System.out.println(gson.toJson(oilUseController.selectAllOil()));
     }
 
@@ -181,8 +190,47 @@ public class BasicDictionaryControllerTest {
         ResponseHashResult responseHashResult = basicDictionaryController.geList(commonQuery);
         System.out.println(responseHashResult.toString());
     }
+
+    private <M, O> M getKeyAndValueByT(M myObject, O outObject) throws IllegalAccessException {
+        List<FieldModel> outObjectFieldAllInfo = getFieldAllInfo(outObject);
+        if (outObjectFieldAllInfo != null && outObjectFieldAllInfo.size() > 0) {
+            Class myObjectClass = myObject.getClass();
+            for (Field field : myObjectClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                Object o = field.get(myObject);
+                if (o == null) {
+                    List<FieldModel> collect = outObjectFieldAllInfo.stream()
+                            .filter(item -> item.getFieldName().equals(field.getName())
+                                    && item.getFieldType().equals(field.getType().toString()))
+                            .collect(Collectors.toList());
+                    if (collect != null && collect.size() == 1){
+                        field.set(myObject, collect.get(0).getFieldValue());
+                    }
+                }
+            }
+        }
+        return myObject;
+    }
+
+    private List<FieldModel> getFieldAllInfo(Object obj) throws IllegalAccessException {
+        List<FieldModel> fieldModelList = new ArrayList<>();
+        Class myObjectClass = obj.getClass();
+        for (Field field : myObjectClass.getDeclaredFields()) {
+            field.setAccessible(true);
+            Object o = field.get(obj);
+            if (o != null) {
+                FieldModel fieldModel = new FieldModel();
+                fieldModel.setFieldName(field.getName());
+                fieldModel.setFieldType(field.getType().toString());
+                fieldModel.setFieldValue(field.get(obj));
+                fieldModelList.add(fieldModel);
+            }
+        }
+        return fieldModelList;
+    }
+
     @Test
-    public void getAllLinkList(){
+    public void getAllLinkList() throws IllegalAccessException {
         List<String> list = new ArrayList<>();
         List<ConditionModel> conditionModels = new ArrayList<>();
         ConditionModel conditionModel = new ConditionModel();
@@ -211,11 +259,17 @@ public class BasicDictionaryControllerTest {
 
         CommonQuery commonQuery = new CommonQuery(2, 10, condList.toString(), sortList.toString());
         List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
+        List<OilUse> oilUses = oilUseController.selectAllOilUse();
+        for (OrderAll orderAll:allLinkList
+             ) {
+            orderAll = getKeyAndValueByT(orderAll,oilUses.get(0));
+        }
+
         System.out.println(gson.toJson(allLinkList));
     }
 
     @Test
-    public void selectAllOrderList(){
+    public void selectAllOrderList() {
         List<String> list = new ArrayList<>();
         List<ConditionModel> conditionModels = new ArrayList<>();
         ConditionModel conditionModel = new ConditionModel();
@@ -248,13 +302,14 @@ public class BasicDictionaryControllerTest {
     }
 
     @Test
-    public void getDictionaryList(){
+    public void getDictionaryList() {
         int pageNo = 1;
         int pageSize = 7;
         CommonQuery commonQuery = new CommonQuery(pageNo, pageSize, getConditionString(), getSortString());
         List<Dictionary> dictionaryList = basicDictionaryController.getDictionaryList(commonQuery);
         System.out.println(dictionaryList);
     }
+
     @Test
     public void geDictionaryName() {
         int pageNo = 1;

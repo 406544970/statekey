@@ -36,10 +36,6 @@ public class OilUseController {
     @Autowired
     OilBaseService oilBaseService;
 
-    //    @Autowired
-//    StringRedisTemplate stringRedisTemplate;
-//    @Autowired
-//    RedisOperator redisOperator;
     @Autowired
     RedisOperator redisOperator;
 
@@ -52,7 +48,6 @@ public class OilUseController {
         List<Order> selectList = orderService.selectList(commonQuery);
         for (Order order : selectList) {
             OrderAll orderAll = gson.fromJson(gson.toJson(order), OrderAll.class);
-            orderAll.setTestString("asdfa");
             orderAllList.add(orderAll);
 
         }

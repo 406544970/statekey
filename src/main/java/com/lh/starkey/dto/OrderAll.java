@@ -10,13 +10,21 @@ import com.lh.starkey.model.Order;
  */
 public class OrderAll extends Order {
 
-    public String testString;
+    /**
+     * 用户类型
+     */
+    private Integer useType;
+    /**
+     * 用户属性一
+     */
+    private Float useAttribute1;
+    /**
+     * 用户属性二
+     */
+    private Float useAttribute2;
+    /**
+     * 用户备注
+     */
+    private String useRemark;
 
-    public String getTestString() {
-        return testString;
-    }
-
-    public void setTestString(String testString) {
-        this.testString = testString;
-    }
 }
