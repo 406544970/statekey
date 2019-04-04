@@ -2,7 +2,6 @@ package com.lh.starkey.unit;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.CaseFormat;
-import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -16,7 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 public class QueryWrapperUtil {
     public static QueryWrapper<?> fillQueryWrapper(String condList, String sortList) {
         QueryWrapper<?> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(condList)) {
+//        if (StringUtils.isNotEmpty(condList)) {
+        if (!condList.isEmpty()) {
             // 解析条件参数字符串
             JSONArray condArray = JSONObject.parseArray(condList);
             for (int i = 0; i < condArray.size(); i ++) {
@@ -66,7 +66,7 @@ public class QueryWrapperUtil {
                 }
             }
         }
-        if (StringUtils.isNotEmpty(sortList)) {
+        if (!sortList.isEmpty()) {
             // 解析排序参数字符串
             JSONArray sortArray = JSONObject.parseArray(sortList);
             for (int i = 0; i < sortArray.size(); i ++) {
