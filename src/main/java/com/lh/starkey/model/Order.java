@@ -9,10 +9,6 @@ import java.util.Date;
  * @editLog
  */
 public class Order  {
-    /**
-     * 标识
-     */
-    private Integer pkno;
 
     public Integer getPkno() {
         return pkno;
@@ -103,43 +99,48 @@ public class Order  {
     }
 
     /**
+     * 标识
+     */
+    public Integer pkno;
+
+    /**
      * 创建时间
      */
-    private Date ctime;
+    public Date ctime;
     /**
      * 修改时间
      */
-    private Date mtime;
+    public Date mtime;
     /**
      * 创建人
      */
-    private String cuser;
+    public String cuser;
     /**
      * 用户主键
      */
-    private Integer useId;
+    public Integer useId;
     /**
      * 用户姓名
      */
-    private String useName;
+    public String useName;
     /**
      *  油品主键
      */
-    private Integer oilId;
+    public Integer oilId;
     /**
      * 油品名称
      */
-    private String oilName;
+    public String oilName;
     /**
      * 油库主键
      */
-    private Integer oilBaseId;
+    public Integer oilBaseId;
     /**
      *  油库名称
      */
-    private String oilBaseName;
+    public String oilBaseName;
     /**
      *  出油数量
      */
-    private Float oilCount;
+    public Float oilCount;
 }

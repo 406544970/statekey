@@ -3,6 +3,7 @@ package com.lh.starkey.controller;
 import com.google.gson.Gson;
 import com.lh.starkey.DemoApplication;
 import com.lh.starkey.common.CommonQuery;
+import com.lh.starkey.dto.OrderAll;
 import com.lh.starkey.model.*;
 import com.lh.starkey.myenum.LogicEnum;
 import org.junit.Test;
@@ -13,8 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author: 梁昊
@@ -181,6 +180,38 @@ public class BasicDictionaryControllerTest {
         CommonQuery commonQuery = new CommonQuery(pageNo, pageSize, getConditionString(), getSortString());
         ResponseHashResult responseHashResult = basicDictionaryController.geList(commonQuery);
         System.out.println(responseHashResult.toString());
+    }
+    @Test
+    public void getAllLinkList(){
+        List<String> list = new ArrayList<>();
+        List<ConditionModel> conditionModels = new ArrayList<>();
+        ConditionModel conditionModel = new ConditionModel();
+        conditionModel.setFieldName("pkno");
+        conditionModel.setLogicOperator(LogicEnum.Between);
+        list.add("1");
+        list.add("10000");
+        conditionModel.setConditionValue(list);
+        conditionModels.add(conditionModel);
+
+        StringBuilder condList = new StringBuilder();
+        int index = 0;
+        condList.append("[");
+        getCreateConditionary(conditionModels, condList, index);
+        condList.append("]");
+
+        List<OrderModel> orderModels = new ArrayList<>();
+        OrderModel orderModel = new OrderModel();
+        orderModel.setAscSign(true);
+        orderModel.setOrderFieldName("oil_count");
+        orderModels.add(orderModel);
+        StringBuilder sortList = new StringBuilder();
+        sortList.append("[");
+        getCreateSortString(orderModels, sortList, index);
+        sortList.append("]");
+
+        CommonQuery commonQuery = new CommonQuery(2, 10, condList.toString(), sortList.toString());
+        List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
+        System.out.println(gson.toJson(allLinkList));
     }
 
     @Test

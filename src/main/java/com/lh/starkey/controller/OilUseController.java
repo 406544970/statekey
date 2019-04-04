@@ -1,18 +1,19 @@
 package com.lh.starkey.controller;
 
 import com.google.gson.Gson;
-import com.lh.starkey.model.Oil;
-import com.lh.starkey.model.OilBase;
-import com.lh.starkey.model.OilUse;
+import com.lh.starkey.common.CommonQuery;
+import com.lh.starkey.dto.OrderAll;
+import com.lh.starkey.model.*;
 import com.lh.starkey.service.OilBaseService;
 import com.lh.starkey.service.OilService;
 import com.lh.starkey.service.OilUseService;
+import com.lh.starkey.service.OrderService;
 import com.lh.starkey.unit.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ import java.util.List;
 @RestController
 public class OilUseController {
     @Autowired
+    OrderService orderService;
+
+    @Autowired
     OilUseService oilUseService;
 
     @Autowired
@@ -32,7 +36,7 @@ public class OilUseController {
     @Autowired
     OilBaseService oilBaseService;
 
-//    @Autowired
+    //    @Autowired
 //    StringRedisTemplate stringRedisTemplate;
 //    @Autowired
 //    RedisOperator redisOperator;
@@ -42,22 +46,37 @@ public class OilUseController {
     @Autowired
     Gson gson;
 
+    @PostMapping("/getAllLinkList")
+    public List<OrderAll> getAllLinkList(CommonQuery commonQuery) {
+        List<OrderAll> orderAllList = new ArrayList<>();
+        List<Order> selectList = orderService.selectList(commonQuery);
+        for (Order order : selectList) {
+            OrderAll orderAll = gson.fromJson(gson.toJson(order), OrderAll.class);
+            orderAll.setTestString("asdfa");
+            orderAllList.add(orderAll);
+
+        }
+        return orderAllList;
+    }
+
+    /**
+     * 将Use,Oil,OilBase这三张表保存到Redis
+     * 键名规则：数据库名 + "_" + 表名
+     * 值内容：整条数据的序列化字符串
+     */
     @PostMapping("/saveAllToRedis")
     public void saveAllToRedis() {
         String keyName = String.format("%s_basic_%s", "test01", "use");
-//        stringRedisTemplate.opsForValue().set(keyName, "asdfom");
         redisOperator.setNameSpace(keyName);
-//        RedisOperator redisOperator = new RedisOperator(keyName);
         for (OilUse row : oilUseService.selectAllOilUse()) {
             redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
         }
-        keyName = String.format("%sbasic%s", "test01", "oil");
+        keyName = String.format("%s_basic_%s", "test01", "oil");
         redisOperator.setNameSpace(keyName);
         for (Oil row : oilService.selectAllOil()) {
             redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
         }
-
-        keyName = String.format("%sbasic%s", "test01", "oil_base");
+        keyName = String.format("%s_basic_%s", "test01", "oil_base");
         redisOperator.setNameSpace(keyName);
         for (OilBase row : oilBaseService.selectAllOilBase()) {
             redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
