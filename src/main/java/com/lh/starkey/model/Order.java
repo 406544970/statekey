@@ -10,137 +10,137 @@ import java.util.Date;
  */
 public class Order  {
 
-    public Integer getPkno() {
+    protected Integer getPkno() {
         return pkno;
     }
 
-    public void setPkno(Integer pkno) {
+    protected void setPkno(Integer pkno) {
         this.pkno = pkno;
     }
 
-    public Date getCtime() {
+    protected Date getCtime() {
         return ctime;
     }
 
-    public void setCtime(Date ctime) {
+    protected void setCtime(Date ctime) {
         this.ctime = ctime;
     }
 
-    public Date getMtime() {
+    protected Date getMtime() {
         return mtime;
     }
 
-    public void setMtime(Date mtime) {
+    protected void setMtime(Date mtime) {
         this.mtime = mtime;
     }
 
-    public String getCuser() {
+    protected String getCuser() {
         return cuser;
     }
 
-    public void setCuser(String cuser) {
+    protected void setCuser(String cuser) {
         this.cuser = cuser;
     }
 
-    public Integer getUseId() {
+    protected Integer getUseId() {
         return useId;
     }
 
-    public void setUseId(Integer useId) {
+    protected void setUseId(Integer useId) {
         this.useId = useId;
     }
 
-    public String getUseName() {
+    protected String getUseName() {
         return useName;
     }
 
-    public void setUseName(String useName) {
+    protected void setUseName(String useName) {
         this.useName = useName;
     }
 
-    public Integer getOilId() {
+    protected Integer getOilId() {
         return oilId;
     }
 
-    public void setOilId(Integer oilId) {
+    protected void setOilId(Integer oilId) {
         this.oilId = oilId;
     }
 
-    public String getOilName() {
+    protected String getOilName() {
         return oilName;
     }
 
-    public void setOilName(String oilName) {
+    protected void setOilName(String oilName) {
         this.oilName = oilName;
     }
 
-    public Integer getOilBaseId() {
+    protected Integer getOilBaseId() {
         return oilBaseId;
     }
 
-    public void setOilBaseId(Integer oilBaseId) {
+    protected void setOilBaseId(Integer oilBaseId) {
         this.oilBaseId = oilBaseId;
     }
 
-    public String getOilBaseName() {
+    protected String getOilBaseName() {
         return oilBaseName;
     }
 
-    public void setOilBaseName(String oilBaseName) {
+    protected void setOilBaseName(String oilBaseName) {
         this.oilBaseName = oilBaseName;
     }
 
-    public Float getOilCount() {
+    protected Float getOilCount() {
         return oilCount;
     }
 
-    public void setOilCount(Float oilCount) {
+    protected void setOilCount(Float oilCount) {
         this.oilCount = oilCount;
     }
 
     /**
      * 标识
      */
-    public Integer pkno;
+    protected Integer pkno;
 
     /**
      * 创建时间
      */
-    public Date ctime;
+    protected Date ctime;
     /**
      * 修改时间
      */
-    public Date mtime;
+    protected Date mtime;
     /**
      * 创建人
      */
-    public String cuser;
+    protected String cuser;
     /**
      * 用户主键
      */
-    public Integer useId;
+    protected Integer useId;
     /**
      * 用户姓名
      */
-    public String useName;
+    protected String useName;
     /**
      *  油品主键
      */
-    public Integer oilId;
+    protected Integer oilId;
     /**
      * 油品名称
      */
-    public String oilName;
+    protected String oilName;
     /**
      * 油库主键
      */
-    public Integer oilBaseId;
+    protected Integer oilBaseId;
     /**
      *  油库名称
      */
-    public String oilBaseName;
+    protected String oilBaseName;
     /**
      *  出油数量
      */
-    public Float oilCount;
+    protected Float oilCount;
 }
