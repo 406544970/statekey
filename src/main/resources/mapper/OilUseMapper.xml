@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lh.starkey.dao.OilUseMapper">
+    <resultMap id="BaseOilUseResultMap" type="com.lh.starkey.model.OilUse">
+        <id column="id" property="id" jdbcType="INTEGER"/><!--  主键 -->
+        <result column="useName" property="useName" jdbcType="VARCHAR"/><!-- 用户名称 -->
+        <result column="useType" property="useType" jdbcType="INTEGER"/><!-- 用户类型 -->
+        <result column="useAttribute1" property="useAttribute1" jdbcType="REAL"/><!-- 用户属性一 -->
+        <result column="useAttribute2" property="useAttribute2" jdbcType="REAL"/><!-- 用户属性二 -->
+        <result column="useRemark" property="useRemark" jdbcType="VARCHAR"/><!-- 用户备注 -->
+    </resultMap>
+    <!-- 注释：主键查询OilUse对象列表 -->
+    <select id="selectAllOilUse" resultMap="BaseOilUseResultMap" >
+        SELECT
+            id
+            ,useName
+            ,useType
+            ,useAttribute1
+            ,useAttribute2
+            ,useRemark
+        FROM basic_use
+        ORDER BY id
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.OrderMapper">
+    <!-- 注释：查询所有油订单 -->
+    <select id="selectAll" resultType="com.lh.starkey.model.Order" >
+        SELECT
+            pkno
+            ,ctime
+            ,mtime
+            ,cuser
+            ,use_id AS useId
+            ,use_name AS useName
+            ,oil_id AS oilId
+            ,oil_name AS oilName
+            ,oil_base_id AS oilBaseId
+            ,oil_base_name AS oilBaseName
+            ,oil_count AS oilCount
+        FROM basic_order
+    </select>
+
+
+</mapper>

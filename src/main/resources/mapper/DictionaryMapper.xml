@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lh.starkey.dao.DictionaryMapper">
+    <resultMap id="ListMap" type="com.lh.starkey.dto.DictionaryList">
+        <id property="pkno" column="pkno"></id>
+        <result column="ctime" property="tctime"/>
+        <collection property="dictionaryNameList" ofType="com.lh.starkey.model.DictionaryName">
+            <id column="id" property="id"/>
+            <result column="ctime" property="ctime"/>
+        </collection>
+    </resultMap>
+    <select id="selectAll" resultMap="ListMap">
+      SELECT main.pkno
+      ,main.ctime as tctime
+      ,Sub.ctime
+      FROM basic_dictionary as main
+      INNER JOIN basic_dictionaryName as Sub on main.pkno = Sub.pkno
+    </select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lh.starkey.dao.OilBaseMapper">
+    <resultMap id="BaseOilBaseMap" type="com.lh.starkey.model.OilBase">
+        <id column="id" property="id" jdbcType="INTEGER"/><!--  主键 -->
+        <result column="baseName" property="baseName" jdbcType="VARCHAR"/><!-- 油库名称 -->
+        <result column="baseType" property="baseType" jdbcType="INTEGER"/><!-- 油库类型 -->
+        <result column="baseAttribute1" property="baseAttribute1" jdbcType="REAL"/><!-- 油库属性一 -->
+        <result column="baseAttribute2" property="baseAttribute2" jdbcType="REAL"/><!-- 油库属性二 -->
+        <result column="baseRemark" property="baseRemark" jdbcType="VARCHAR"/><!-- 油库备注 -->
+    </resultMap>
+    <!-- 注释：查询所有油库信息 -->
+    <select id="selectAllOilBase" resultMap="BaseOilBaseMap" >
+        SELECT
+            id
+            ,baseName
+            ,baseType
+            ,baseAttribute1
+            ,baseAttribute2
+            ,baseRemark
+        FROM basic_oil_base
+        ORDER BY id
+    </select>
+
+</mapper>
