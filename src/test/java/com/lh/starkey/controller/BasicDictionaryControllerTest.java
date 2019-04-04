@@ -1,6 +1,5 @@
 package com.lh.starkey.controller;
 
-import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 import com.google.gson.Gson;
 import com.lh.starkey.DemoApplication;
 import com.lh.starkey.common.CommonQuery;
@@ -14,13 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author: 梁昊
@@ -203,7 +200,7 @@ public class BasicDictionaryControllerTest {
                             .filter(item -> item.getFieldName().equals(field.getName())
                                     && item.getFieldType().equals(field.getType().toString()))
                             .collect(Collectors.toList());
-                    if (collect != null && collect.size() == 1){
+                    if (collect != null && collect.size() == 1) {
                         field.set(myObject, collect.get(0).getFieldValue());
                     }
                 }
@@ -229,8 +226,65 @@ public class BasicDictionaryControllerTest {
         return fieldModelList;
     }
 
+    /**
+     * 根据原始列表，对指定属性去掉重复
+     *
+     * @param kList         原列表
+     * @param keyMethodName 得到值的方法名，如：getName
+     * @param kClass        原列表中对象类
+     * @param <T>           返回对象类
+     * @param <K>           原列表中对象类
+     * @return 去重复后的列表
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    private <T, K> List<T> clearRepetition(List<K> kList, String keyMethodName, Class<K> kClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (kList == null || kList.isEmpty())
+            return null;
+        List<T> list = new ArrayList();
+        Method method = kClass.getMethod(keyMethodName);
+        for (K row : kList
+                ) {
+            @SuppressWarnings("unchecked")
+            T key = (T) method.invoke(row);
+            if (list.indexOf(key) < 0)
+                list.add(key);
+        }
+        return list;
+    }
+
+    /**
+     * 根据指定属性的值，在原始列表中，找出等于该属性值的对象
+     *
+     * @param tList         原始列表
+     * @param keyMethodName 得到属性值的方法名称
+     * @param valueList     值列表
+     * @param tClass        原始列表对象类
+     * @param <T>           原始类泛型
+     * @param <K>           值类泛型
+     * @return 返回符合该属性值的原始对象列表
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    private <T, K> List<T> getKeyList(List<T> tList, String keyMethodName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (tList == null || tList.isEmpty())
+            return null;
+        List<T> list = new ArrayList();
+        Method method = tClass.getMethod(keyMethodName);
+        for (T row : tList
+                ) {
+            @SuppressWarnings("unchecked")
+            K key = (K) method.invoke(row);
+            if (valueList.indexOf(key) < 0)
+                list.add(row);
+        }
+        return list;
+    }
+
     @Test
-    public void getAllLinkList() throws IllegalAccessException {
+    public void getAllLinkList() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<String> list = new ArrayList<>();
         List<ConditionModel> conditionModels = new ArrayList<>();
         ConditionModel conditionModel = new ConditionModel();
@@ -260,12 +314,12 @@ public class BasicDictionaryControllerTest {
         CommonQuery commonQuery = new CommonQuery(2, 10, condList.toString(), sortList.toString());
         List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
         List<OilUse> oilUses = oilUseController.selectAllOilUse();
-        for (OrderAll orderAll:allLinkList
-             ) {
-            orderAll = getKeyAndValueByT(orderAll,oilUses.get(0));
-        }
-
-        System.out.println(gson.toJson(allLinkList));
+//        for (OrderAll orderAll : allLinkList
+//                ) {
+//            orderAll = getKeyAndValueByT(orderAll, oilUses.get(0));
+//        }
+        List<Integer> getOilId = clearRepetition(allLinkList, "getOilId", OrderAll.class);
+        System.out.println(gson.toJson(getOilId));
     }
 
     @Test
