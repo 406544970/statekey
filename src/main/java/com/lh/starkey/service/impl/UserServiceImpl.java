@@ -1,10 +1,10 @@
-package com.lh.starkey.service;
+package com.lh.starkey.service.impl;
 
 import com.lh.starkey.dao.RoleMapper;
 import com.lh.starkey.dao.UserMapper;
 import com.lh.starkey.model.Role;
 import com.lh.starkey.model.User;
-import com.lh.starkey.service.impl.UserService;
+import com.lh.starkey.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

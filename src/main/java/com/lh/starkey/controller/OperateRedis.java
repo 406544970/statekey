@@ -18,7 +18,7 @@ import java.util.*;
  */
 @RestController
 public class OperateRedis {
-    @Autowired
+    @Autowired(required = false)
     StringRedisTemplate stringRedisTemplate;
 
     /**

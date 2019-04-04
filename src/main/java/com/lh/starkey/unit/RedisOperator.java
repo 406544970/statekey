@@ -3,6 +3,8 @@ package com.lh.starkey.unit;
 import com.lh.starkey.myenum.DictionaryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,16 @@ import java.util.List;
  * @description: 项目[statekey]: com.lh.starkey.unit
  * @date:2019/4/3
  */
+@Component
 public class RedisOperator {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-    private String nameSpace;
-
-    public RedisOperator(String nameSpace) {
-        super();
+    public void setNameSpace(String nameSpace) {
         this.nameSpace = nameSpace;
     }
+
+    private String nameSpace;
 
     public String getNameSpace() {
         return nameSpace;

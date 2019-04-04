@@ -35,6 +35,10 @@ public class BasicDictionaryControllerTest {
     Gson gson;
 
     @Test
+    public void saveAllToRedis(){
+        oilUseController.saveAllToRedis();
+    }
+    @Test
     public void selectAllOilUse(){
         System.out.println(gson.toJson(oilUseController.selectAllOilUse()));
     }

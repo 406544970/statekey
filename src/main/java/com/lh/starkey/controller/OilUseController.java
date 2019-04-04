@@ -1,12 +1,15 @@
 package com.lh.starkey.controller;
 
+import com.google.gson.Gson;
 import com.lh.starkey.model.Oil;
 import com.lh.starkey.model.OilBase;
 import com.lh.starkey.model.OilUse;
 import com.lh.starkey.service.OilBaseService;
 import com.lh.starkey.service.OilService;
 import com.lh.starkey.service.OilUseService;
+import com.lh.starkey.unit.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +32,38 @@ public class OilUseController {
     @Autowired
     OilBaseService oilBaseService;
 
+//    @Autowired
+//    StringRedisTemplate stringRedisTemplate;
+//    @Autowired
+//    RedisOperator redisOperator;
+    @Autowired
+    RedisOperator redisOperator;
+
+    @Autowired
+    Gson gson;
+
+    @PostMapping("/saveAllToRedis")
+    public void saveAllToRedis() {
+        String keyName = String.format("%s_basic_%s", "test01", "use");
+//        stringRedisTemplate.opsForValue().set(keyName, "asdfom");
+        redisOperator.setNameSpace(keyName);
+//        RedisOperator redisOperator = new RedisOperator(keyName);
+        for (OilUse row : oilUseService.selectAllOilUse()) {
+            redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
+        }
+        keyName = String.format("%sbasic%s", "test01", "oil");
+        redisOperator.setNameSpace(keyName);
+        for (Oil row : oilService.selectAllOil()) {
+            redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
+        }
+
+        keyName = String.format("%sbasic%s", "test01", "oil_base");
+        redisOperator.setNameSpace(keyName);
+        for (OilBase row : oilBaseService.selectAllOilBase()) {
+            redisOperator.saveToRedis(row.getId().toString(), gson.toJson(row));
+        }
+    }
+
     /**
      * 主键查询OilUse对象列表
      *
@@ -39,6 +74,7 @@ public class OilUseController {
 //      请在这里写逻辑代码
         return oilUseService.selectAllOilUse();
     }
+
     /**
      * 得到所有Oil对象列表
      *

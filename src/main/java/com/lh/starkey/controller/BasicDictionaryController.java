@@ -15,6 +15,7 @@ import com.lh.starkey.myenum.ResultCode;
 import com.lh.starkey.service.DictionaryNameService;
 import com.lh.starkey.service.DictionaryService;
 import com.lh.starkey.service.OrderService;
+import com.lh.starkey.unit.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class BasicDictionaryController {
 
     @Autowired
     OrderService orderService;
+
     /**
      * 查询所有油订单
      *
