@@ -23,6 +23,12 @@ public class OilUseController {
     @Autowired
     OilUseService oilUseService;
 
+    @Autowired
+    OilService oilService;
+
+    @Autowired
+    OilBaseService oilBaseService;
+
     /**
      * 主键查询OilUse对象列表
      *
@@ -30,14 +36,9 @@ public class OilUseController {
      */
     @PostMapping("/selectAllOilUse")
     public List<OilUse> selectAllOilUse() {
-
 //      请在这里写逻辑代码
-
         return oilUseService.selectAllOilUse();
     }
-    @Autowired
-    OilService oilService;
-
     /**
      * 得到所有Oil对象列表
      *
@@ -48,8 +49,6 @@ public class OilUseController {
 //      请在这里写逻辑代码
         return oilService.selectAllOil();
     }
-    @Autowired
-    OilBaseService oilBaseService;
 
     /**
      * 查询所有油库信息
@@ -58,9 +57,7 @@ public class OilUseController {
      */
     @PostMapping("/selectAllOilBase")
     public List<OilBase> selectAllOilBase() {
-
 //      请在这里写逻辑代码
-
         return oilBaseService.selectAllOilBase();
     }
 }
