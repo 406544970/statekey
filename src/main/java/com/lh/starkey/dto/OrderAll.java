@@ -120,7 +120,6 @@ public class OrderAll extends Order {
         return super.setOilCount(oilCount);
     }
 
-
     public Integer getUseType() {
         return useType;
     }
@@ -173,5 +172,109 @@ public class OrderAll extends Order {
      * 用户备注
      */
     private String useRemark;
+    /**
+     *  油品类型
+     */
+    private Integer oilType;
+    /**
+     *  油品属性一
+     */
+    private Float oilAttribute1;
+    /**
+     *  油品属性二
+     */
+    private Float oilAttribute2;
+    /**
+     * 油品备注
+     */
+    private String oilRemark;
+    /**
+     * 油库类型
+     */
+    private Integer baseType;
+    /**
+     * 油库属性一
+     */
+    private Float baseAttribute1;
+    /**
+     * 油库属性二
+     */
+    private Float baseAttribute2;
+    /**
+     * 油库备注
+     */
+    private String baseRemark;
 
+    public Integer getOilType() {
+        return oilType;
+    }
+
+    public OrderAll setOilType(Integer oilType) {
+        this.oilType = oilType;
+        return this;
+    }
+
+    public Float getOilAttribute1() {
+        return oilAttribute1;
+    }
+
+    public OrderAll setOilAttribute1(Float oilAttribute1) {
+        this.oilAttribute1 = oilAttribute1;
+        return this;
+    }
+
+    public Float getOilAttribute2() {
+        return oilAttribute2;
+    }
+
+    public OrderAll setOilAttribute2(Float oilAttribute2) {
+        this.oilAttribute2 = oilAttribute2;
+        return this;
+    }
+
+    public String getOilRemark() {
+        return oilRemark;
+    }
+
+    public OrderAll setOilRemark(String oilRemark) {
+        this.oilRemark = oilRemark;
+        return this;
+    }
+
+
+    public Integer getBaseType() {
+        return baseType;
+    }
+
+    public OrderAll setBaseType(Integer baseType) {
+        this.baseType = baseType;
+        return this;
+    }
+
+    public Float getBaseAttribute1() {
+        return baseAttribute1;
+    }
+
+    public OrderAll setBaseAttribute1(Float baseAttribute1) {
+        this.baseAttribute1 = baseAttribute1;
+        return this;
+    }
+
+    public Float getBaseAttribute2() {
+        return baseAttribute2;
+    }
+
+    public OrderAll setBaseAttribute2(Float baseAttribute2) {
+        this.baseAttribute2 = baseAttribute2;
+        return this;
+    }
+
+    public String getBaseRemark() {
+        return baseRemark;
+    }
+
+    public OrderAll setBaseRemark(String baseRemark) {
+        this.baseRemark = baseRemark;
+        return this;
+    }
 }

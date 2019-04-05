@@ -20,6 +20,19 @@ public class Oil  {
      */
     private Integer oilType;
 
+    /**
+     *  油品属性一
+     */
+    private Float oilAttribute1;
+    /**
+     *  油品属性二
+     */
+    private Float oilAttribute2;
+    /**
+     * 油品备注
+     */
+    private String oilRemark;
+
     public Integer getId() {
         return id;
     }
@@ -68,16 +81,4 @@ public class Oil  {
         this.oilRemark = oilRemark;
     }
 
-    /**
-     *  油品属性一
-     */
-    private Float oilAttribute1;
-    /**
-     *  油品属性二
-     */
-    private Float oilAttribute2;
-    /**
-     * 油品备注
-     */
-    private String oilRemark;
 }
