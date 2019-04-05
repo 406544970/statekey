@@ -1,11 +1,7 @@
 package com.lh.starkey.dto;
 
 import com.lh.starkey.model.Order;
-
-import java.lang.ref.PhantomReference;
-import java.lang.ref.WeakReference;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * @author: 姊佹槉

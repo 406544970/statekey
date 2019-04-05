@@ -188,6 +188,169 @@ public class BasicDictionaryControllerTest {
         System.out.println(responseHashResult.toString());
     }
 
+    private String getCamelGetMethodName(String key) {
+        return getCamelMethodName(key, true);
+    }
+
+    private String getCamelSetMethodName(String key) {
+        return getCamelMethodName(key, false);
+    }
+
+    /**
+     * 转换成驼峰命名法的字符串
+     * 以下划线为分割符
+     *
+     * @param key 需要转换的字符串，如：vou_use_name
+     * @return 驼峰命名法的字符串字符串
+     */
+    private String getCamelNameByDownLine(String key) {
+        if (key == null || key.trim().isEmpty())
+            return null;
+        String[] split = key.trim().split("_");
+        if (split != null && split.length > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < split.length; i++) {
+                if (split[i] != null && !split[i].trim().isEmpty()) {
+                    split[i] = split[i].trim();
+                    if (i > 0)
+                        stringBuilder.append(split[i].substring(0, 1).toUpperCase());
+                    else
+                        stringBuilder.append(split[i].substring(0, 1).toLowerCase());
+                    stringBuilder.append(split[i].substring(1));
+                }
+            }
+            return stringBuilder.toString();
+        } else
+            return null;
+    }
+
+    @Test
+    public void getCamelNameByDownLine() {
+        System.out.println(getCamelNameByDownLine("vou_use_name"));
+    }
+
+    /**
+     * 得到驼峰命名法的方法名
+     * 如：输入useId，返回:getUseId或setUseId
+     *
+     * @param key     属性名
+     * @param getSign true:get方法；false:set方法
+     * @return 驼峰命名法的方法名，若key为null，返回为：null
+     */
+    private String getCamelMethodName(String key, boolean getSign) {
+        if (key == null || key.trim().isEmpty())
+            return null;
+        key = key.substring(0, 1).toUpperCase() + key.substring(1);
+        return getSign ? String.format("get%s", key) : String.format("set%s", key);
+    }
+
+    @Test
+    public void getCamelMethodName() {
+        System.out.println(getCamelGetMethodName("   "));
+        System.out.println(getCamelSetMethodName("idid"));
+    }
+
+    /**
+     * 判断指定类中，是否存在指定属性
+     * 仅判断本类中的属性，不能判断父类中的属性
+     *
+     * @param myObject  指定类
+     * @param fieldName 属性名
+     * @param <M>       占位符
+     * @return true:存在；false:不存在；
+     */
+    public <M> boolean getExistFieldName(M myObject, String fieldName) throws NoSuchFieldException {
+        if (fieldName == null)
+            return false;
+        fieldName = fieldName.replace(" ", "");
+        if (!fieldName.isEmpty())
+            return myObject.getClass().getDeclaredField(fieldName) != null ? true : false;
+        else
+            return false;
+    }
+
+    @Test
+    public void getExistFieldName() throws NoSuchFieldException {
+        List<OilUse> oilUses = oilUseController.selectAllOilUse();
+        System.out.println(getExistFieldName(oilUses.get(0), "id"));
+    }
+
+    private <M, O> M getValuebyKeyName(M myObject, List<O> outObject
+            , String mainKeyName, String outKeyName, String outMessage) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
+        outMessage = "关联成功";
+        /**
+         *第一步：根据主键名，得到get方法名
+         */
+        String getMainMethodName = getCamelGetMethodName(mainKeyName);
+        /**
+         * 第二步：判断该方法名是否存在
+         */
+        if (!getClassMethodExist(getMainMethodName, myObject.getClass())) {
+            outMessage = String.format("%s该方法不存在;", getMainMethodName);
+            return myObject;
+        }
+        /**
+         * 第三步：根据get方法名，得到该属性值
+         */
+        Class myObjectClass = myObject.getClass();
+        Method method = myObjectClass.getMethod(getMainMethodName);
+        @SuppressWarnings("unchecked")
+        Object keyValue = method.invoke(myObject);
+        /**
+         * 第四步：判断值是否为null
+         */
+        if (keyValue == null) {
+            outMessage = String.format("%s该方法取出的值为null;", getMainMethodName);
+            return myObject;
+        }
+        /**
+         * 第五步：判断关联列表是否为null
+         */
+        if (outObject == null || outObject.isEmpty()) {
+            outMessage = "关联列表为null;";
+            return myObject;
+        }
+        /**
+         * 第六步：判断关联列表是否存在关联主键属性
+         */
+        if (!getExistFieldName(outObject.get(0), outKeyName)) {
+            outMessage = String.format("关联类中，不存在%s属性;", outKeyName);
+            return myObject;
+        }
+        /**
+         * 第七步：判断关联列表对象中，是否存在该主键的get方法
+         */
+        String getLinkMethodName = getCamelGetMethodName(outKeyName);
+        Class outClass = outObject.get(0).getClass();
+        Method outMainMethod = outClass.getMethod(getLinkMethodName);
+        if (outMainMethod == null) {
+            outMessage = String.format("关联类中，不存在%s方法;", getLinkMethodName);
+            return myObject;
+        }
+        /**
+         * 第八步：在关联表中，过滤出等于主对象值的列表
+         */
+        List<Object> valueList = new ArrayList<>();
+        valueList.add(keyValue);
+        List<O> keyEqualsList = getKeyEqualsList(outObject, getLinkMethodName, valueList, outClass);
+        /**
+         * 第九步：判断过滤后的关联表，是否为null
+         */
+        if (keyEqualsList == null) {
+            outMessage = String.format("关联类中，不存在属性为%s,值为%s的数据;", outKeyName, keyValue);
+            keyEqualsList.clear();
+            return myObject;
+        }
+        /**
+         * 最后一步：万事俱备，只欠东风，开始关联
+         */
+        for (O row : keyEqualsList
+                ) {
+            myObject = getKeyAndValueByT(myObject, row);
+        }
+        return myObject;
+    }
+
     private <M, O> M getKeyAndValueByT(M myObject, O outObject) throws IllegalAccessException {
         List<FieldModel> outObjectFieldAllInfo = getFieldAllInfo(outObject);
         if (outObjectFieldAllInfo != null && outObjectFieldAllInfo.size() > 0) {
@@ -227,29 +390,49 @@ public class BasicDictionaryControllerTest {
     }
 
     /**
-     * 根据原始列表，对指定属性去掉重复
+     * 指定类中，指定方法是否存在
+     *
+     * @param methodName 方法名
+     * @param kClass     指定类
+     * @param <K>        类点位符
+     * @return true:存在；false:不存在
+     */
+    private <K> boolean getClassMethodExist(String methodName, Class<K> kClass) {
+        boolean existSign = false;
+        for (Method method : kClass.getMethods()) {
+            if (method.getName().equals(methodName))
+                existSign = true;
+        }
+        return existSign;
+    }
+
+    /**
+     * 在原始列表中，对指定属性去掉重复
      *
      * @param kList         原列表
-     * @param keyMethodName 得到值的方法名，如：getName
+     * @param keyMethodName 得到属性值的方法名，如：getName
      * @param kClass        原列表中对象类
      * @param <T>           返回对象类
      * @param <K>           原列表中对象类
-     * @return 去重复后的列表
+     * @return 去重复后的单属性列表
      * @throws NoSuchMethodException
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private <T, K> List<T> clearRepetition(List<K> kList, String keyMethodName, Class<K> kClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private <T, K> List<T> getClearRepetitionSingleAttributeList(List<K> kList, String keyMethodName, Class<K> kClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if (kList == null || kList.isEmpty())
             return null;
         List<T> list = new ArrayList();
-        Method method = kClass.getMethod(keyMethodName);
-        for (K row : kList
-                ) {
-            @SuppressWarnings("unchecked")
-            T key = (T) method.invoke(row);
-            if (list.indexOf(key) < 0)
-                list.add(key);
+        if (getClassMethodExist(keyMethodName, kClass)) {
+            Method method = kClass.getMethod(keyMethodName);
+            for (K row : kList
+                    ) {
+                @SuppressWarnings("unchecked")
+                T key = (T) method.invoke(row);
+                if (list.indexOf(key) < 0) {
+                    list.add(key);
+                }
+            }
         }
         return list;
     }
@@ -268,7 +451,7 @@ public class BasicDictionaryControllerTest {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private <T, K> List<T> getKeyList(List<T> tList, String keyMethodName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private <T, K> List<T> getKeyEqualsList(List<T> tList, String keyMethodName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if (tList == null || tList.isEmpty())
             return null;
         List<T> list = new ArrayList();
@@ -277,14 +460,14 @@ public class BasicDictionaryControllerTest {
                 ) {
             @SuppressWarnings("unchecked")
             K key = (K) method.invoke(row);
-            if (valueList.indexOf(key) < 0)
+            if (valueList.indexOf(key) > -1)
                 list.add(row);
         }
         return list;
     }
 
     @Test
-    public void getAllLinkList() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void getAllLinkList() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
         List<String> list = new ArrayList<>();
         List<ConditionModel> conditionModels = new ArrayList<>();
         ConditionModel conditionModel = new ConditionModel();
@@ -314,12 +497,17 @@ public class BasicDictionaryControllerTest {
         CommonQuery commonQuery = new CommonQuery(2, 10, condList.toString(), sortList.toString());
         List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
         List<OilUse> oilUses = oilUseController.selectAllOilUse();
-//        for (OrderAll orderAll : allLinkList
-//                ) {
-//            orderAll = getKeyAndValueByT(orderAll, oilUses.get(0));
-//        }
-        List<Integer> getOilId = clearRepetition(allLinkList, "getOilId", OrderAll.class);
-        System.out.println(gson.toJson(getOilId));
+        List<Integer> getOilId = getClearRepetitionSingleAttributeList(allLinkList, "getUseId", OrderAll.class);
+        List<OilUse> getId = getKeyEqualsList(oilUses, "getId", getOilId, OilUse.class);
+
+        String outMessage = "";
+        for (OrderAll orderAll : allLinkList
+                ) {
+            getValuebyKeyName(orderAll, getId, "useId", "id", outMessage);
+        }
+
+        System.out.println(gson.toJson(allLinkList));
+        System.out.println(outMessage);
     }
 
     @Test
