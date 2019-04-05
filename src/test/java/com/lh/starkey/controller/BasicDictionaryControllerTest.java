@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -501,12 +502,13 @@ public class BasicDictionaryControllerTest {
         List<OilUse> getId = getKeyEqualsList(oilUses, "getId", getOilId, OilUse.class);
 
         String outMessage = "";
+        System.out.println("Begin:" + new Date());
         for (OrderAll orderAll : allLinkList
                 ) {
             getValuebyKeyName(orderAll, getId, "useId", "id", outMessage);
         }
-
         System.out.println(gson.toJson(allLinkList));
+        System.out.println("End:" + new Date());
         System.out.println(outMessage);
     }
 
