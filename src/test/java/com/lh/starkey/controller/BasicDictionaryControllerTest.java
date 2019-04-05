@@ -188,24 +188,6 @@ public class BasicDictionaryControllerTest {
         System.out.println(responseHashResult.toString());
     }
 
-    @Test
-    public void getCamelNameByDownLine() {
-        System.out.println(ListToolClass.getCamelNameByDownLine("vou_use_name"));
-    }
-
-
-    @Test
-    public void getCamelMethodName() {
-        System.out.println( ComToolClass.getCamelGetMethodName("   "));
-        System.out.println( ComToolClass.getCamelSetMethodName("idid"));
-    }
-
-
-    @Test
-    public void getExistFieldName() throws NoSuchFieldException {
-        List<OilUse> oilUses = oilUseController.selectAllOilUse();
-        System.out.println(ListToolClass.getExistFieldName(oilUses.get(0), "id"));
-    }
 
     @Test
     public void getAllLinkList() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
