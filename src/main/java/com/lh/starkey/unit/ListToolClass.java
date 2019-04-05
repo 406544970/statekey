@@ -177,10 +177,10 @@ public class ListToolClass {
      *
      * @param methodName 方法名
      * @param kClass     指定类
-     * @param <K>        类点位符
+     * @param <T>        类点位符
      * @return true:存在；false:不存在
      */
-    public static <K> boolean getClassMethodExist(String methodName, Class<K> kClass) {
+    public static <T> boolean getClassMethodExist(String methodName, Class<T> kClass) {
         boolean existSign = false;
         for (Method method : kClass.getMethods()) {
             if (method.getName().equals(methodName))
@@ -223,10 +223,10 @@ public class ListToolClass {
      *
      * @param myObject  指定类
      * @param fieldName 属性名
-     * @param <M>       占位符
+     * @param <T>       占位符
      * @return true:存在；false:不存在；
      */
-    public static <M> boolean getExistFieldName(M myObject, String fieldName) throws NoSuchFieldException {
+    public static <T> boolean getExistFieldName(T myObject, String fieldName) throws NoSuchFieldException {
         if (fieldName == null)
             return false;
         fieldName = fieldName.replace(" ", "");
