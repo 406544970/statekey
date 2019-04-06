@@ -1,14 +1,16 @@
 package com.lh.starkey.controller;
 
-import com.lh.starkey.myenum.DictionaryType;
 import com.lh.starkey.model.Model;
+import com.lh.starkey.myenum.DictionaryType;
+import com.lh.starkey.unit.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: 梁昊
@@ -21,6 +23,17 @@ public class OperateRedis {
     @Autowired(required = false)
     StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    RedisOperator redisOperator;
+
+    public <V> V getVValue(Object key, Class<V> vClass) {
+        return redisOperator.getVValue(key, vClass);
+    }
+
+    public <K, V> void save(K key, V value) {
+        redisOperator.save(key, value);
+    }
+
     /**
      * @return
      */
@@ -31,7 +44,6 @@ public class OperateRedis {
 
     /**
      * 保存油品信息
-     *
      *
      * @param key   ID
      * @param value Name

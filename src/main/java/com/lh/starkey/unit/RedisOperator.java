@@ -1,10 +1,9 @@
 package com.lh.starkey.unit;
 
-import com.lh.starkey.myenum.DictionaryType;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,9 @@ import java.util.List;
 public class RedisOperator {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    Gson gson;
 
     public void setNameSpace(String nameSpace) {
         this.nameSpace = nameSpace;
@@ -62,6 +64,14 @@ public class RedisOperator {
         this.delete(key);
     }
 
+    public <K, V> void save(K key, V value) {
+        saveObject(key, gson.toJson(value));
+    }
+
+    private <K, V> void saveObject(K key, V value) {
+        stringRedisTemplate.opsForValue().set(key.toString(), value.toString());
+    }
+
     /**
      * 增加或修改指定键值
      *
@@ -70,6 +80,17 @@ public class RedisOperator {
      */
     private void saveString(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
+    }
+
+    public <V> V getVValue(Object key, Class<V> tClass) {
+        return getValue(key);
+    }
+
+    private <V> V getValue(Object key) {
+        if (key != null)
+            return (V) stringRedisTemplate.opsForValue().get(key);
+        else
+            return null;
     }
 
     private String getString(String key) {

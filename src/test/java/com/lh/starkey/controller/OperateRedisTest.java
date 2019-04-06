@@ -31,6 +31,30 @@ public class OperateRedisTest {
     Gson gson;
 
     @Test
+    public void getVValue() {
+        User test = gson.fromJson(operateRedis.getVValue("test", String.class), User.class);
+        System.out.println(test.getId());
+        System.out.println(test.getName());
+        System.out.println(test.getPwd());
+        System.out.println(test.getRoleId());
+        System.out.println(test.getCreateTime());
+        System.out.println(test.getUpdateTime());
+    }
+
+    @Test
+    public void save() {
+        User user = new User();
+        user.setId((long) 10);
+        user.setName("name10");
+        user.setPwd("pass10");
+        user.setRoleId((long) 12);
+        user.setUpdateTime(new Date());
+        user.setCreateTime(user.getUpdateTime());
+
+        operateRedis.save("test", gson.toJson(user));
+    }
+
+    @Test
     public void getVersion() {
         System.out.println(operateRedis.getVersion());
     }
