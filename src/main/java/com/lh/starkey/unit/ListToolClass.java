@@ -86,7 +86,7 @@ public class ListToolClass {
         /**
          * 第七步：判断关联列表对象中，是否存在该主键的get方法
          */
-        String getLinkMethodName =  ComToolClass.getCamelGetMethodName(outKeyName);
+        String getLinkMethodName = ComToolClass.getCamelGetMethodName(outKeyName);
         Class outClass = outObject.get(0).getClass();
         Method outMainMethod = outClass.getMethod(getLinkMethodName);
         if (outMainMethod == null) {
@@ -250,7 +250,7 @@ public class ListToolClass {
      * @throws IllegalAccessException
      */
     public static <T, K> List<T> getClearRepetitionSingleAttributeListByKey(List<K> kList, String keyName, Class<K> kClass, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String keyMethodName =  ComToolClass.getCamelGetMethodName(keyName);
+        String keyMethodName = ComToolClass.getCamelGetMethodName(keyName);
         return getClearRepetitionSingleAttributeList(kList, keyMethodName, kClass, tClass);
     }
 
@@ -269,7 +269,7 @@ public class ListToolClass {
      * @throws IllegalAccessException
      */
     public static <T, K> List<T> getKeyEqualsListByKeyName(List<T> tList, String keyName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String keyMethodName =  ComToolClass.getCamelGetMethodName(keyName);
+        String keyMethodName = ComToolClass.getCamelGetMethodName(keyName);
         return getKeyEqualsList(tList, keyMethodName, valueList, tClass);
     }
 
@@ -304,11 +304,29 @@ public class ListToolClass {
         return list;
     }
 
-    public static <T, K, V> List<T> getFilterList(List<K> kList, String mainKeyName, List<T> tList, String linkKeyName,Class<K> kClass, Class<T> tClass, Class<V> vClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    /**
+     * 在原始列表中，根据指定属性的值，在关联列表中，找出等于该属性值的对象列表
+     *
+     * @param kList       原始列表
+     * @param mainKeyName 得到属性名，如：name
+     * @param kClass      原始列表对象的类名
+     * @param vClass      原始列表对象指定属性类型
+     * @param tList       关联列表
+     * @param linkKeyName 关联列表的主键属性名称
+     * @param tClass      关联列表对象的类名
+     * @param <T>         原始列表对象类占位符
+     * @param <K>         关联列表对象类占位符
+     * @param <V>         原始列表对象指定属性类占位符
+     * @return 返回过滤后的关联列表
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    public static <T, K, V> List<T> getFilterList(List<K> kList, String mainKeyName, Class<K> kClass, Class<V> vClass, List<T> tList, String linkKeyName, Class<T> tClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<V> clearRepetitionSingleAttributeListByKey = getClearRepetitionSingleAttributeListByKey(kList, mainKeyName, kClass, vClass);
-        List<T> keyEqualsListByKeyName = getKeyEqualsListByKeyName(tList, linkKeyName, clearRepetitionSingleAttributeListByKey, tClass);
-        return keyEqualsListByKeyName;
+        return getKeyEqualsListByKeyName(tList, linkKeyName, clearRepetitionSingleAttributeListByKey, tClass);
     }
+
     /**
      * 根据指定属性的值，在原始列表中，找出等于该属性值的对象
      *

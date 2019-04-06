@@ -214,24 +214,27 @@ public class BasicDictionaryControllerTest {
         sortList.append("[");
         getCreateSortString(orderModels, sortList, index);
         sortList.append("]");
-        CommonQuery commonQuery = new CommonQuery(1, 1000, condList.toString(), sortList.toString());
+        CommonQuery commonQuery = new CommonQuery(1, 50, condList.toString(), sortList.toString());
         List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
 
 //      开始做好关联前的准备工作
         List<OilUse> oilUses = oilUseController.selectAllOilUse();
         String mainOilUseKeyId = "useId";
         String linkOilUseKeyId = "id";
-        List<OilUse> oilUsesFilter = ListToolClass.getFilterList(allLinkList, mainOilUseKeyId, oilUses, linkOilUseKeyId, OrderAll.class, OilUse.class, Integer.class);
+        List<OilUse> oilUsesFilter = ListToolClass.getFilterList(allLinkList, mainOilUseKeyId, OrderAll.class, Integer.class
+                , oilUses, linkOilUseKeyId, OilUse.class);
 
         List<Oil> oils = oilUseController.selectAllOil();
         String mainOilKeyId = "oilId";
         String linkOilKeyId = linkOilUseKeyId;
-        List<Oil> oilsFilter = ListToolClass.getFilterList(allLinkList, mainOilKeyId, oils, linkOilKeyId, OrderAll.class, Oil.class, Integer.class);
+        List<Oil> oilsFilter = ListToolClass.getFilterList(allLinkList, mainOilKeyId, OrderAll.class, Integer.class
+                , oils, linkOilKeyId, Oil.class);
 
         List<OilBase> oilBases = oilUseController.selectAllOilBase();
         String mainOilBaseKeyId = "oilBaseId";
         String linkOilBaseKeyId = linkOilUseKeyId;
-        List<OilBase> oilBasesFilter = ListToolClass.getFilterList(allLinkList, mainOilBaseKeyId, oilBases, linkOilBaseKeyId, OrderAll.class, OilBase.class, Integer.class);
+        List<OilBase> oilBasesFilter = ListToolClass.getFilterList(allLinkList, mainOilBaseKeyId, OrderAll.class, Integer.class
+                , oilBases, linkOilBaseKeyId, OilBase.class);
 
         String outMessage = null;
         System.out.println("Begin:" + new Date());
