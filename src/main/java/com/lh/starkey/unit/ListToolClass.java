@@ -255,6 +255,25 @@ public class ListToolClass {
     }
 
     /**
+     * 根据指定属性的值，在原始列表中，找出等于该属性值的对象
+     *
+     * @param tList     原始列表
+     * @param keyName   得到属性的名称
+     * @param valueList 值列表
+     * @param tClass    原始列表对象类
+     * @param <T>       原始类泛型
+     * @param <K>       值类泛型
+     * @return 返回符合该属性值的原始对象列表
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static <T, K> List<T> getKeyEqualsListByKeyName(List<T> tList, String keyName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        String keyMethodName =  ComToolClass.getCamelGetMethodName(keyName);
+        return getKeyEqualsList(tList, keyMethodName, valueList, tClass);
+    }
+
+    /**
      * 在原始列表中，对指定属性去掉重复
      *
      * @param kList         原列表
@@ -285,25 +304,11 @@ public class ListToolClass {
         return list;
     }
 
-    /**
-     * 根据指定属性的值，在原始列表中，找出等于该属性值的对象
-     *
-     * @param tList     原始列表
-     * @param keyName   得到属性的名称
-     * @param valueList 值列表
-     * @param tClass    原始列表对象类
-     * @param <T>       原始类泛型
-     * @param <K>       值类泛型
-     * @return 返回符合该属性值的原始对象列表
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public static <T, K> List<T> getKeyEqualsListByKeyName(List<T> tList, String keyName, List<K> valueList, Class<T> tClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String keyMethodName =  ComToolClass.getCamelGetMethodName(keyName);
-        return getKeyEqualsList(tList, keyMethodName, valueList, tClass);
+    public static <T, K, V> List<T> getFilterList(List<K> kList, String mainKeyName, List<T> tList, String linkKeyName,Class<K> kClass, Class<T> tClass, Class<V> vClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        List<V> clearRepetitionSingleAttributeListByKey = getClearRepetitionSingleAttributeListByKey(kList, mainKeyName, kClass, vClass);
+        List<T> keyEqualsListByKeyName = getKeyEqualsListByKeyName(tList, linkKeyName, clearRepetitionSingleAttributeListByKey, tClass);
+        return keyEqualsListByKeyName;
     }
-
     /**
      * 根据指定属性的值，在原始列表中，找出等于该属性值的对象
      *

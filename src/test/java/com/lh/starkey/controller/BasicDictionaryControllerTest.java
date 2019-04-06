@@ -221,20 +221,17 @@ public class BasicDictionaryControllerTest {
         List<OilUse> oilUses = oilUseController.selectAllOilUse();
         String mainOilUseKeyId = "useId";
         String linkOilUseKeyId = "id";
-        List<Integer> allLinkListClearOilUse = ListToolClass.getClearRepetitionSingleAttributeListByKey(allLinkList, mainOilUseKeyId, OrderAll.class, Integer.class);
-        List<OilUse> oilUsesFilter = ListToolClass.getKeyEqualsListByKeyName(oilUses, linkOilUseKeyId, allLinkListClearOilUse, OilUse.class);
+        List<OilUse> oilUsesFilter = ListToolClass.getFilterList(allLinkList, mainOilUseKeyId, oilUses, linkOilUseKeyId, OrderAll.class, OilUse.class, Integer.class);
 
         List<Oil> oils = oilUseController.selectAllOil();
         String mainOilKeyId = "oilId";
         String linkOilKeyId = linkOilUseKeyId;
-        List<Integer> allLinkListClearOil = ListToolClass.getClearRepetitionSingleAttributeListByKey(allLinkList, mainOilKeyId, OrderAll.class, Integer.class);
-        List<Oil> oilsFilter = ListToolClass.getKeyEqualsListByKeyName(oils, linkOilKeyId, allLinkListClearOil, Oil.class);
+        List<Oil> oilsFilter = ListToolClass.getFilterList(allLinkList, mainOilKeyId, oils, linkOilKeyId, OrderAll.class, Oil.class, Integer.class);
 
         List<OilBase> oilBases = oilUseController.selectAllOilBase();
         String mainOilBaseKeyId = "oilBaseId";
         String linkOilBaseKeyId = linkOilUseKeyId;
-        List<Integer> allLinkListClearOilBase = ListToolClass.getClearRepetitionSingleAttributeListByKey(allLinkList, mainOilBaseKeyId, OrderAll.class, Integer.class);
-        List<OilBase> oilBasesFilter = ListToolClass.getKeyEqualsListByKeyName(oilBases, linkOilBaseKeyId, allLinkListClearOilBase, OilBase.class);
+        List<OilBase> oilBasesFilter = ListToolClass.getFilterList(allLinkList, mainOilBaseKeyId, oilBases, linkOilBaseKeyId, OrderAll.class, OilBase.class, Integer.class);
 
         String outMessage = null;
         System.out.println("Begin:" + new Date());
