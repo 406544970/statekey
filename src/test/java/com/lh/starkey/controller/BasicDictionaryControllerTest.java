@@ -214,9 +214,8 @@ public class BasicDictionaryControllerTest {
         sortList.append("[");
         getCreateSortString(orderModels, sortList, index);
         sortList.append("]");
-        CommonQuery commonQuery = new CommonQuery(1, 50, condList.toString(), sortList.toString());
+        CommonQuery commonQuery = new CommonQuery(1, 1000, condList.toString(), sortList.toString());
         List<OrderAll> allLinkList = oilUseController.getAllLinkList(commonQuery);
-
 //      开始做好关联前的准备工作
         List<OilUse> oilUses = oilUseController.selectAllOilUse();
         String mainOilUseKeyId = "useId";
@@ -238,6 +237,7 @@ public class BasicDictionaryControllerTest {
 
         String outMessage = null;
         System.out.println("Begin:" + new Date());
+        System.out.println(gson.toJson(allLinkList));
         for (OrderAll orderAll : allLinkList
                 ) {
             if (outMessage == null)
